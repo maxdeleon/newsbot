@@ -79,13 +79,10 @@ def report():
 
 
 
-query = 'Agfax.com'
-my_message = get_news_today(query)
-telegram_bot_sendtext(my_message)
 
 
-#schedule.every().day.at("9:00").do(report)
 
-#while True:
- #   schedule.run_pending()
-  #  time.sleep(1)'''
+schedule.every().day.at("9:00").do(report)
+while True:
+    schedule.run_pending()
+    time.sleep(1)'''
