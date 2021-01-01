@@ -4,12 +4,11 @@ import requests
 import nltk
 from newspaper import Article
 from googlesearch import search 
-from datetime import date
 
 
 def searchLinks(query):
   article_links = []
-  for j in search(query, tld="com", lang='en', start=0, num=10, stop=10, pause=1): 
+  for j in search(query, tld="com", lang='en', start=0, num=4, stop=4, pause=1): 
     article_links.append(j)
 
   return article_links
@@ -28,11 +27,11 @@ def processNews(links):
 
       title = article.title
       author = article.authors
-      date = article.publish_date
+      article_date = article.publish_date
       text = article.text
       summary = article.summary
 
-      data = [date, title, author, summary, links[x]]
+      data = [article_date, title, author, summary, links[x]]
 
       news.append(data)
 
@@ -43,8 +42,10 @@ def processNews(links):
 
 
 def get_news_today(query):
-  today = date.today()
-  query = query + ' ' + str(today)
+  from datetime import date
+
+  current_date = date.today()
+  query = query + ' ' + str(current_date)
   links = searchLinks(query)
   data = processNews(links)
 
@@ -63,8 +64,8 @@ def get_news_today(query):
 
 def telegram_bot_sendtext(bot_message):
     
-    bot_token = ''
-    bot_chatID = ''
+    bot_token = 'xxxxxxxxxxxxxxxxxxxxxxxxxx'
+    bot_chatID = 'xxxxxxxxxxxxxxxxxxxxx'
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
 
     response = requests.get(send_text)
@@ -77,9 +78,14 @@ def report():
     telegram_bot_sendtext(my_message)
 
 
-    
-schedule.every().day.at("9:00").do(report)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+query = 'Agfax.com'
+my_message = get_news_today(query)
+telegram_bot_sendtext(my_message)
+
+
+#schedule.every().day.at("9:00").do(report)
+
+#while True:
+ #   schedule.run_pending()
+  #  time.sleep(1)'''
